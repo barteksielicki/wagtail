@@ -65,7 +65,8 @@ def get_rendition_upload_to(instance, filename):
 
 @python_2_unicode_compatible
 class AbstractImage(CollectionMember, index.Indexed, models.Model):
-    title = models.CharField(max_length=255, verbose_name=_('title'))
+    title = models.CharField(max_length=255, verbose_name="%s (alt)" % _('title'))
+    html_title = models.CharField(max_length=255, verbose_name="HTML title", blank=True)
     file = models.ImageField(
         verbose_name=_('file'), upload_to=get_upload_to, width_field='width', height_field='height'
     )
@@ -326,6 +327,7 @@ class Image(AbstractImage):
     admin_form_fields = (
         'title',
         'file',
+        'html_title',
         'collection',
         'tags',
         'focal_point_x',
@@ -453,6 +455,10 @@ class AbstractRendition(models.Model):
         return self.image.title
 
     @property
+    def html_title(self):
+        return self.image.html_title
+
+    @property
     def attrs(self):
         """
         The src, width, height, and alt attributes for an <img> tag, as a HTML
@@ -465,12 +471,16 @@ class AbstractRendition(models.Model):
         """
         A dict of the src, width, height, and alt attributes for an <img> tag.
         """
-        return OrderedDict([
+        attrs = OrderedDict([
             ('src', self.url),
             ('width', self.width),
             ('height', self.height),
             ('alt', self.alt),
         ])
+        html_title = self.html_title
+        if html_title:
+            attrs.update({"title": html_title})
+        return attrs
 
     def img_tag(self, extra_attributes={}):
         attrs = self.attrs_dict.copy()
