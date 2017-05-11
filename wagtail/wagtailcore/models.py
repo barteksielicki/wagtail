@@ -371,6 +371,8 @@ class Page(six.with_metaclass(PageBase, AbstractPage, index.Indexed, Clusterable
             grandparent = parent.get_parent()
             if grandparent and grandparent.get_parent():
                 parent = grandparent
+            else:
+                break
         if parent:
             self.url_path = parent.url_path + self.slug + '/'
         else:
