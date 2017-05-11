@@ -619,7 +619,7 @@ class Page(six.with_metaclass(PageBase, AbstractPage, index.Indexed, Clusterable
             remaining_components = path_components[1:]
 
             try:
-                subpage = self.get_children().get(slug=child_slug)
+                subpage = self.get_descendants().get(slug=child_slug)
             except Page.DoesNotExist:
                 raise Http404
 
