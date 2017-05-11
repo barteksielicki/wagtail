@@ -367,7 +367,7 @@ class Page(six.with_metaclass(PageBase, AbstractPage, index.Indexed, Clusterable
         new unsaved pages a meaningful URL when previewing them; at that point the page has not
         been assigned a position in the tree, as far as treebeard is concerned.
         """
-        while parent.get_parent():
+        while parent and parent.get_parent():
             parent = parent.get_parent()
         if parent:
             self.url_path = parent.url_path + self.slug + '/'
