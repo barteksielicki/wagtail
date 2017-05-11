@@ -368,7 +368,7 @@ class Page(six.with_metaclass(PageBase, AbstractPage, index.Indexed, Clusterable
         been assigned a position in the tree, as far as treebeard is concerned.
         """
         if parent:
-            self.url_path = parent.url_path + self.slug + '/'
+            self.url_path = self.slug + '/'
         else:
             # a page without a parent is the tree root, which always has a url_path of '/'
             self.url_path = '/'
