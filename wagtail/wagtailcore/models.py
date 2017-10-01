@@ -16,6 +16,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.core.urlresolvers import reverse
 from django.db import connection, models, transaction
 from django.db.models import Q
+from django.db.models.functions import Lower
 from django.http import Http404
 from django.template.response import TemplateResponse
 # Must be imported from Django so we get the new implementation of with_metaclass
@@ -1807,7 +1808,7 @@ class PageViewRestriction(models.Model):
 
 class BaseCollectionManager(models.Manager):
     def get_queryset(self):
-        return TreeQuerySet(self.model).order_by('path')
+        return TreeQuerySet(self.model).order_by(Lower('name'))
 
 
 CollectionManager = BaseCollectionManager.from_queryset(TreeQuerySet)
@@ -1843,6 +1844,7 @@ class Collection(MP_Node):
     class Meta:
         verbose_name = _('collection')
         verbose_name_plural = _('collections')
+        ordering = ('name',)
 
 
 def get_root_collection_id():
